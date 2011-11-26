@@ -55,8 +55,8 @@ public class NW2PNGHelper implements Runnable {
       return renderNPCs;
     }
     
-    public void setRenderNPCs(boolean filter) {
-      this.renderNPCs = filter;
+    public void setRenderNPCs(boolean renderNPCs) {
+      this.renderNPCs = renderNPCs;
     }
     
     
