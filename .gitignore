@@ -1,2 +1,5 @@
 tests/output.png
 tests/errorLog.txt
+build/temp
+NW2PNG-cli.jar
+NW2PNG-gui.jar
