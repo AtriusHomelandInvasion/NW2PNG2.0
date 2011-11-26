@@ -1,4 +1,4 @@
-package src.born2kill.nw2png;
+package born2kill.nw2png;
 
 public interface Listener {
     public void sendMessage(String message);

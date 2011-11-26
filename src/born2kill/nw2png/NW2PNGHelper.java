@@ -4,7 +4,7 @@ http://forums.graalonline.com/forums/showthread.php?t=134259601
 
 Modifications by Chris Vimes
  */
-package src.born2kill.nw2png;
+package born2kill.nw2png;
 
 import java.awt.*;
 import java.awt.image.*;

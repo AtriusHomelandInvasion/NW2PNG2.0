@@ -1,7 +1,7 @@
-package src.org.graalcenter.nw2png;
+package org.graalcenter.nw2png;
 
-import src.born2kill.nw2png.Listener;
-import src.born2kill.nw2png.NW2PNGHelper;
+import born2kill.nw2png.Listener;
+import born2kill.nw2png.NW2PNGHelper;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
