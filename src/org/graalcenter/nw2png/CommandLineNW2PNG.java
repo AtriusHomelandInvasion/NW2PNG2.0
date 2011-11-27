@@ -11,7 +11,7 @@ import joptsimple.OptionSet;
 public class CommandLineNW2PNG implements Listener {
     private NW2PNGHelper helper;
     
-    public CommandLineNW2PNG(String graalDir, File tileset, File input, File output, boolean renderNPCs, boolean filter, boolean split, double scale) {
+    public CommandLineNW2PNG(String graalDir, File tileset, File input, File output, boolean renderNPCs, boolean filter, boolean split, boolean renderChars, double scale) {
         helper = new NW2PNGHelper(this);
         
         // set options
@@ -23,6 +23,7 @@ public class CommandLineNW2PNG implements Listener {
             helper.setRenderNPCs(renderNPCs);
             helper.setFilter(filter);
             helper.setSplit(split);
+            helper.setRenderChars(renderChars);
             helper.setScale(scale);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -45,6 +46,7 @@ public class CommandLineNW2PNG implements Listener {
                 // options
                 accepts("skip-npcs", "Don't render NPCs");
                 accepts("skip-filter", "Don't filter output");
+                accepts("skip-chars", "Don't render characters");
                 accepts("split", "Split GMAP into levels");
                 
                 // optional arguments
@@ -73,6 +75,7 @@ public class CommandLineNW2PNG implements Listener {
             
             boolean renderNPCs = ! options.has("skip-npcs");
             boolean filter = ! options.has("skip-filter");
+            boolean renderChars = ! options.has("skip-chars");
             boolean split = options.has("split");
             
             double scale = Double.valueOf(options.valueOf("scale").toString());
@@ -87,6 +90,7 @@ public class CommandLineNW2PNG implements Listener {
                 {"Render NPCs", renderNPCs},
                 {"Filter", filter},
                 {"Split", split},
+                {"Render Characters", renderChars},
                 {"Scale", scale}
             };
             
@@ -94,7 +98,7 @@ public class CommandLineNW2PNG implements Listener {
                 System.out.println("\t" + printedOption[0] + ": " + printedOption[1]);
             }
             
-            new CommandLineNW2PNG(graalDir, tileset, input, output, renderNPCs, filter, split, scale);
+            new CommandLineNW2PNG(graalDir, tileset, input, output, renderNPCs, filter, split, renderChars, scale);
         }
         
     }
