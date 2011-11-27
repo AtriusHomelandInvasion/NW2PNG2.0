@@ -545,9 +545,9 @@ public class GraphicalNW2PNG implements Listener, ActionListener {
         updateGenerateButton();
 
         filterToggle.setSelected(filterOutput);
-        helper.setFilter(filterOutput);
+        helper.setFilterOutput(filterOutput);
         partimgsToggle.setSelected(splitImages);
-        helper.setSplit(splitImages);
+        helper.setSplitImages(splitImages);
         rendernpcsToggle.setSelected(renderNPCs);
         helper.setRenderNPCs(renderNPCs);
         rendercharsToggle.setSelected(renderChars);
@@ -637,10 +637,10 @@ public class GraphicalNW2PNG implements Listener, ActionListener {
             }
         } else if (object == filterToggle) {
           filterOutput = filterToggle.isSelected();
-          helper.setFilter(filterOutput);
+          helper.setFilterOutput(filterOutput);
         } else if (object == partimgsToggle) {
           splitImages = partimgsToggle.isSelected();
-          helper.setSplit(splitImages);
+          helper.setSplitImages(splitImages);
         } else if (object == rendernpcsToggle) {
           renderNPCs = rendernpcsToggle.isSelected();
           helper.setRenderNPCs(renderNPCs);

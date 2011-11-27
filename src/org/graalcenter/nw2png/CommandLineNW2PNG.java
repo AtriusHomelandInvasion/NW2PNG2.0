@@ -21,8 +21,8 @@ public class CommandLineNW2PNG implements Listener {
             helper.setSourceFile(input);
             helper.setOutputFile(output);
             helper.setRenderNPCs(renderNPCs);
-            helper.setFilter(filter);
-            helper.setSplit(split);
+            helper.setFilterOutput(filter);
+            helper.setSplitImages(split);
             helper.setRenderChars(renderChars);
             helper.setScale(scale);
         } catch (IOException ex) {
