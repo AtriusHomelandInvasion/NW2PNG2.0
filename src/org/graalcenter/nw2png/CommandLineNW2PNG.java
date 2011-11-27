@@ -15,20 +15,15 @@ public class CommandLineNW2PNG implements Listener {
         helper = new NW2PNGHelper(this);
         
         // set options
-        try {
-            helper.setGraalDir(graalDir);
-            helper.setTileset(tileset);
-            helper.setSourceFile(input);
-            helper.setOutputFile(output);
-            helper.setRenderNPCs(renderNPCs);
-            helper.setFilterOutput(filter);
-            helper.setSplitImages(split);
-            helper.setRenderChars(renderChars);
-            helper.setScale(scale);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(0);
-        }
+        helper.setGraalDir(graalDir);
+        helper.setTilesetFile(tileset);
+        helper.setSourceFile(input);
+        helper.setOutputFile(output);
+        helper.setRenderNPCs(renderNPCs);
+        helper.setFilterOutput(filter);
+        helper.setSplitImages(split);
+        helper.setRenderChars(renderChars);
+        helper.setScale(scale);
         
         // run
         helper.generate();

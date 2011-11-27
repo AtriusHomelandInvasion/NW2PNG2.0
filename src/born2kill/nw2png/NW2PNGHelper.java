@@ -6,11 +6,10 @@ Modifications by Chris Vimes and Dusty
  */
 package born2kill.nw2png;
 
+import born2kill.nw2png.exception.NoFilenameCacheFoundException;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import javax.imageio.ImageIO;
 
 
 public class NW2PNGHelper implements Runnable {
@@ -20,22 +19,19 @@ public class NW2PNGHelper implements Runnable {
     private double scale = 1;
     private File sourceFile;
     private File outputFile;
-    private String graalDir = "C:\\Program Files\\Graal\\";
+    private File tilesetFile;
+    private String graalDir; // should end with File.separator
     private boolean filterOutput = true;
     private boolean splitImages = false;
     private boolean renderNPCs = true;
     private boolean renderChars = true;
     
     // temporary data used for a single render
-    private BufferedImage tileset = null;
-    HashMap<String, String> fileMap = new HashMap();
+    private BufferedImage tileset;
+    private HashMap<String, String> fileMap;
 
     public NW2PNGHelper(Listener listener) {
         this.listener = listener;
-    }
-
-    public void setTileset(File tilesetFile) throws IOException {
-        tileset = ImageIO.read(tilesetFile);
     }
 
     public void generate() {
@@ -44,82 +40,106 @@ public class NW2PNGHelper implements Runnable {
     }
 
     public void run() {
-        
+        try {
+            // before we start generating, verify that all settings are valid
+            if (settingsValid()) {
+                listener.sendMessage("Specified options were valid, now parsing FILENAMECACHE.txt.");
+
+                try {
+                    fileMap = GraalFormatHelper.parseFilenameCache(graalDir);
+                    listener.sendMessage("Loaded " + fileMap.size() + " entries from FILENAMECACHE.txt.");
+                } catch (NoFilenameCacheFoundException ex) {
+                    listener.sendMessage("Unable to find a FILENAMECACHE.txt file in your Graal directory. Scanning your Graal directory... (this could take a while)");
+                    fileMap = GraalFormatHelper.scanDirectory(graalDir);
+                    listener.sendMessage("Scanned " + fileMap.size() + " files in the Graal directory.");
+                }
+
+            } else {
+                listener.sendMessage("Unable to continue, please fix your specified options.");
+            }
+        } catch (Exception ex) { // if an error is ever expected, it should be caught earlier than this
+            ex.printStackTrace();
+        }
     }
     
-    // 
-    
+    private boolean settingsValid() {
+        // only verifying options with no default; if someone wants to put in an invalid scale,
+        // for example, no sense in protecting them from whatever happens
+        if (sourceFile == null || ! sourceFile.exists()) {
+            listener.sendMessage("You need to specify a source file.");
+            return false;
+        }
+        
+        if (outputFile == null) {
+            listener.sendMessage("You need to specify an output file.");
+            return false;
+        }
+        
+        if (tilesetFile == null || ! tilesetFile.exists()) {
+            listener.sendMessage("You need to specify a tileset file.");
+            return false;
+        }
+        
+        if (graalDir == null) {
+            listener.sendMessage("You need to specify your Graal directory.");
+            return false;
+        }
+        
+        
+        return true;
+    }
 
     // getters and setters
-    public boolean shouldFilterOutput() {
-        return filterOutput;
-    }
-
+    
     public void setFilterOutput(boolean filterOutput) {
         this.filterOutput = filterOutput;
     }
-
+    
     public String getGraalDir() {
         return graalDir;
     }
-
+    
     public void setGraalDir(String graalDir) {
         this.graalDir = graalDir;
     }
-
+    
     public File getOutputFile() {
         return outputFile;
     }
-
+    
     public void setOutputFile(File outputFile) {
         this.outputFile = outputFile;
-    }
-
-    public boolean shouldRenderChars() {
-        return renderChars;
     }
 
     public void setRenderChars(boolean renderChars) {
         this.renderChars = renderChars;
     }
 
-    public boolean shouldRenderNPCs() {
-        return renderNPCs;
-    }
-
     public void setRenderNPCs(boolean renderNPCs) {
         this.renderNPCs = renderNPCs;
-    }
-
-    public double getScale() {
-        return scale;
     }
 
     public void setScale(double scale) {
         this.scale = scale;
     }
-
+    
     public File getSourceFile() {
         return sourceFile;
     }
-
+    
     public void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
-    }
-
-    public boolean shouldSplitImages() {
-        return splitImages;
     }
 
     public void setSplitImages(boolean splitImages) {
         this.splitImages = splitImages;
     }
-
-    public BufferedImage getTileset() {
-        return tileset;
+    
+    public File getTilesetFile() {
+        return tilesetFile;
     }
-
-    public void setTileset(BufferedImage tileset) {
-        this.tileset = tileset;
+    
+    public void setTilesetFile(File tilesetFile) {
+        this.tilesetFile = tilesetFile;
     }
 }

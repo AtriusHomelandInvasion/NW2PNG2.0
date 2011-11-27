@@ -92,13 +92,9 @@ public class GraphicalNW2PNG implements Listener, ActionListener {
     }
 
     private void setTileset(File file) {
-        try {
-            helper.setTileset(file);
-            tilesetdir = file;
-            tilesetFileLabel.setText(file.getName());
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Can't load the image file. Sorry.");
-        }
+        helper.setTilesetFile(file);
+        tilesetdir = file;
+        tilesetFileLabel.setText(file.getName());
 
         SaveDirs();
         updateGenerateButton();
@@ -214,7 +210,7 @@ public class GraphicalNW2PNG implements Listener, ActionListener {
     }
 
     private void updateGenerateButton() {
-        generateButton.setEnabled(helper.getTileset() != null && helper.getSourceFile() != null && helper.getOutputFile() != null && ! isGenerating);
+        generateButton.setEnabled(helper.getTilesetFile() != null && helper.getSourceFile() != null && helper.getOutputFile() != null && ! isGenerating);
     }
 
     private void makeFrame() {
