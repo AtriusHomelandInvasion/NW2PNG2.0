@@ -14,7 +14,7 @@ public class GraalFormatHelper {
         return base64.indexOf(tileString.substring(0, 1)) * 64 + base64.indexOf(tileString.substring(1, 2));
     }
 
-    public static int[] getTileXY(int tileNumber) {
+    public static int[] getTileLocation(int tileNumber) {
         int[] tile_xy = {(tileNumber % 16 + tileNumber / 512 * 16) * 16, (tileNumber / 16 % 32) * 16};
         return tile_xy;
     }

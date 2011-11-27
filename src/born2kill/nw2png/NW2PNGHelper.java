@@ -9,7 +9,9 @@ package born2kill.nw2png;
 import born2kill.nw2png.exception.NoFilenameCacheFoundException;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 
 public class NW2PNGHelper implements Runnable {
@@ -38,13 +40,16 @@ public class NW2PNGHelper implements Runnable {
         Thread runner = new Thread(this);
         runner.start();
     }
-
+    
+    // this method prepares global variables (tileset, file map) and checks settings, then
+    // hands off the rendering to either renderGMAP or renderLevel
     public void run() {
         try {
             // before we start generating, verify that all settings are valid
             if (settingsValid()) {
-                listener.sendMessage("Specified options were valid, now parsing FILENAMECACHE.txt.");
-
+                listener.sendMessage("Specified options were valid, now reading FILENAMECACHE.txt.");
+                
+                // read FILENAMECACHE.txt or scan the Graal directory if necessary
                 try {
                     fileMap = GraalFormatHelper.parseFilenameCache(graalDir);
                     listener.sendMessage("Loaded " + fileMap.size() + " entries from FILENAMECACHE.txt.");
@@ -53,13 +58,36 @@ public class NW2PNGHelper implements Runnable {
                     fileMap = GraalFormatHelper.scanDirectory(graalDir);
                     listener.sendMessage("Scanned " + fileMap.size() + " files in the Graal directory.");
                 }
-
+                
+                // load the tileset into a BufferedImage
+                tileset = ImageIO.read(tilesetFile);
+                
+                // the rest is now handled differently, depending on if it's a level or a map
+                if (sourceFile.getName().endsWith(".gmap")) {
+                    // GMAP
+                    renderGMAP();
+                } else {
+                    // level
+                    renderLevel();
+                }
             } else {
+                // settings weren't valid
                 listener.sendMessage("Unable to continue, please fix your specified options.");
             }
         } catch (Exception ex) { // if an error is ever expected, it should be caught earlier than this
             ex.printStackTrace();
         }
+    }
+    
+    private void renderGMAP() throws Exception {
+        throw new Exception("Not yet supported.");
+    }
+    
+    private void renderLevel() throws IOException {
+        GraalLevel level = new GraalLevel(sourceFile);
+        level.parse();
+        BufferedImage image = level.generateImage(tileset);
+        ImageIO.write(image, "png", outputFile);
     }
     
     private boolean settingsValid() {
